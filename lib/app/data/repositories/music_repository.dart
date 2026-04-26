@@ -6,7 +6,7 @@ import 'package:music_player/app/data/models/playlist.dart';
 
 int i = 1; //Replace later for real IDs
 
-class ProductsRepository {
+class MusicRepository {
   final List<Music> _musics = [];
   final List<Album> _albums = [];
   final List<Playlist> _playlists = [];
@@ -15,7 +15,7 @@ class ProductsRepository {
   UnmodifiableListView<Album> get albums => UnmodifiableListView(_albums);
   UnmodifiableListView<Playlist> get playlists => UnmodifiableListView(_playlists);
 
-  Future<List<Music>> loadSongs() async {
+  Future<List<Music>> loadMusics() async {
     await Future.delayed(Duration(seconds: 2));
     return musics;
   }
@@ -42,45 +42,37 @@ class ProductsRepository {
     i=i+1;
   }
 
-  ///////////////////////////////////////////////////////
-  Future<void> addProduct(String productName) async {
-    await Future.delayed(Duration(seconds: 2));
-    _productsList.add(
-      Product(title: productName),
+  void addToPlaylist(int playlistId, Music song) {
+    final index = _playlists.indexWhere((pl) => pl.id == playlistId); //iterates over _playlists with pl
+    if (index == -1) return;
+
+    final playlist = _playlists[index];
+
+    // musica ja existe na pl
+    final alreadyExists = playlist.musicList.any((m) => m.id == song.id);
+    if (alreadyExists) return;
+
+    _playlists[index] = Playlist(
+      id: playlist.id,
+      name: playlist.name,
+      coverUrl: playlist.coverUrl,
+      musicList: [...playlist.musicList, song],
     );
   }
 
-  Future<List<Product>> loadProducts() async {
-    await Future.delayed(Duration(seconds: 2));
-    return products;
-  }
+  void removeFromPlaylist(int playlistId, Music song) {
+    final index = _playlists.indexWhere((pl) => pl.id == playlistId);
+    if (index == -1) return;
 
-  void toggleCartItem(Product product) {
-    int productIndex = _cartItems.indexWhere(
-      (item) => item.product.title == product.title,
+    final playlist = _playlists[index];
+
+    final updatedSongs = playlist.musicList.where((m) => m.id != song.id).toList();
+
+    _playlists[index] = Playlist(
+      id: playlist.id,
+      name: playlist.name,
+      coverUrl: playlist.coverUrl,
+      musicList: updatedSongs,
     );
-    if (productIndex >= 0) {
-      _cartItems.removeAt(productIndex);
-      return;
-    }
-    _cartItems.add(CartItem(product: product, amount: 1));
   }
-
-  void _changeAmount(CartItem cartItem, int amount) {
-    final index = cartItems.indexWhere(
-      (item) => item.product.title == cartItem.product.title,
-    );
-    _cartItems[index] = CartItem(product: cartItem.product, amount: amount);
-  }
-
-  void increase(CartItem cartItem) {
-    final amount = cartItem.amount + 1;
-    _changeAmount(cartItem, amount);
-  }
-
-  void decrease(CartItem cartItem) {
-    final amount = (cartItem.amount == 0) ? 0 : cartItem.amount - 1;
-    _changeAmount(cartItem, amount);
-  }
-}
 }
