@@ -3,10 +3,12 @@ import 'dart:collection';
 import 'package:music_player/app/data/models/music.dart';
 import 'package:music_player/app/data/models/album.dart';
 import 'package:music_player/app/data/models/playlist.dart';
+import 'package:music_player/app/data/services/music_service.dart';
 
 int i = 1; //Replace later for real IDs
 
 class MusicRepository {
+  final MusicService _service = MusicService();
   final List<Music> _musics = [];
   final List<Album> _albums = [];
   final List<Playlist> _playlists = [];
@@ -16,17 +18,20 @@ class MusicRepository {
   UnmodifiableListView<Playlist> get playlists => UnmodifiableListView(_playlists);
 
   Future<List<Music>> loadMusics() async {
-    await Future.delayed(Duration(seconds: 2));
+    final result = await _service.fetchMusics();
+    _musics.addAll(result);
     return musics;
   }
 
   Future<List<Album>> loadAlbums() async {
-    await Future.delayed(Duration(seconds: 2));
+    final result = await _service.fetchAlbums(_musics);
+    _albums.addAll(result);
     return albums;
   }
 
   Future<List<Playlist>> loadPlayLists() async {
-    await Future.delayed(Duration(seconds: 2));
+    final result = await _service.fetchPlaylists(_musics);
+    _playlists.addAll(result);
     return playlists;
   }
 
