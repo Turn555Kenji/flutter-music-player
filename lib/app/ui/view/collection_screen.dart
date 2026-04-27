@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/album_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/playlist_viewmodel.dart';
 import 'package:music_player/app/widgets/playlist_item.dart';
+import 'package:music_player/app/routes.dart';
+import 'package:go_router/go_router.dart';
 
 class CollectionScreen extends StatefulWidget {
   final AlbumViewmodel albumViewmodel;
@@ -65,9 +67,18 @@ class _CollectionScreenState extends State<CollectionScreen> {
               ))
             ],
           );
-
         }
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1,
+        onTap: (index) {
+          if (index == 0) context.go(Routes.musics);
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Music'),
+          BottomNavigationBarItem(icon: Icon(Icons.library_music), label: 'Library'),
+        ],
+      )
     );
   }
 }

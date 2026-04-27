@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/music_viewmodel.dart';
 import 'package:music_player/app/widgets/music_item.dart';
+import 'package:music_player/app/routes.dart';
+import 'package:go_router/go_router.dart';
 
 class MusicScreen extends StatefulWidget {
   final MusicViewmodel musicViewmodel;
@@ -50,6 +52,16 @@ class _MusicScreenState extends State<MusicScreen> {
 
         }
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 1) context.go(Routes.collections);
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Music'),
+          BottomNavigationBarItem(icon: Icon(Icons.library_music), label: 'Library'),
+        ],
+      )
     );
   }
 }
