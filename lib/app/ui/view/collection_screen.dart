@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/album_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/playlist_viewmodel.dart';
 import 'package:music_player/app/widgets/playlist_item.dart';
+import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:music_player/app/routes.dart';
 import 'package:go_router/go_router.dart';
 
@@ -69,15 +70,32 @@ class _CollectionScreenState extends State<CollectionScreen> {
           );
         }
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        onTap: (index) {
-          if (index == 0) context.go(Routes.musics);
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Music'),
-          BottomNavigationBarItem(icon: Icon(Icons.library_music), label: 'Library'),
-        ],
+
+
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MiniPlayer(
+            isPlaying: false,
+            currTime: Duration.zero,
+            totalTime: Duration(minutes: 3, seconds: 30),
+            onPlayPause: () {},
+            onNext: () {},
+            onPrevious: () {},
+            onTap: () {},
+          ),
+      
+          BottomNavigationBar(
+            currentIndex: 1,
+            onTap: (index) {
+              if (index == 0) context.go(Routes.musics);
+            },
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Music'),
+              BottomNavigationBarItem(icon: Icon(Icons.library_music), label: 'Library'),
+            ],
+          )
+        ]
       )
     );
   }
