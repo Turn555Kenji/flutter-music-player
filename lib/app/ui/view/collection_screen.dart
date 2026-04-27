@@ -86,11 +86,13 @@ class _CollectionScreenState extends State<CollectionScreen> {
           ),
       
           BottomNavigationBar(
-            currentIndex: 1,
+            currentIndex: 2,
             onTap: (index) {
-              if (index == 0) context.go(Routes.musics);
+              if (index == 1) context.go(Routes.musics);
+              if (index == 0) context.go(Routes.player);
             },
             items: [
+              BottomNavigationBarItem(icon: Icon(Icons.play_arrow), label: 'Currently Playing'),
               BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Music'),
               BottomNavigationBarItem(icon: Icon(Icons.library_music), label: 'Library'),
             ],

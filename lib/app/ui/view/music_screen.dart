@@ -66,11 +66,13 @@ class _MusicScreenState extends State<MusicScreen> {
             onTap: () {},
           ),
           BottomNavigationBar(
-            currentIndex: 0,
+            currentIndex: 1,
             onTap: (index) {
-              if (index == 1) context.go(Routes.collections);
+              if (index == 0) context.go(Routes.player);
+              if (index == 2) context.go(Routes.collections);
             },
             items: [
+              BottomNavigationBarItem(icon: Icon(Icons.play_arrow), label: 'Currently Playing'),
               BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Music'),
               BottomNavigationBarItem(icon: Icon(Icons.library_music), label: 'Library'),
             ],
