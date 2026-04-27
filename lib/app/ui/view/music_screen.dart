@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/music_viewmodel.dart';
+import 'package:music_player/app/widgets/music_item.dart';
 
 class MusicScreen extends StatefulWidget {
   final MusicViewmodel musicViewmodel;
@@ -33,7 +34,20 @@ class _MusicScreenState extends State<MusicScreen> {
             return Center(child: CircularProgressIndicator());
           }
 
-          return Text("test");
+          return ListView.builder(
+            itemCount: vm.musics.length,
+            itemBuilder: (context, index) {
+              final music = vm.musics[index];
+
+              return MusicItem(
+                name: music.name,
+                artist: music.artist,
+                duration: music.duration,
+                onPressed: () {},
+              );
+            },
+          );
+
         }
       ),
     );
