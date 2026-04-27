@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/providers.dart';
 import 'package:music_player/app/ui/view/music_screen.dart';
+import 'package:music_player/app/ui/view/collection_screen.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
@@ -18,8 +19,12 @@ class App extends StatelessWidget {
           return MaterialApp(
             title: 'Music Player',
             debugShowCheckedModeBanner: false,
-            home: MusicScreen(
+            /*home: MusicScreen(
               musicViewmodel: context.read(),
+            ),*/
+            home: CollectionScreen(
+              albumViewmodel: context.read(),
+              playlistViewmodel: context.read(),
             ),
           //routerConfig: routes,
           );

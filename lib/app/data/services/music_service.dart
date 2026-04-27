@@ -22,9 +22,9 @@ class MusicService {
       Album(
         id: 1, 
         name: "Album 1",
-        artist: "Artist 1",
+        artist: "Artista 1",
         coverUrl: "",
-        musicList: songs.where((s) => s.artist == "Artist 1").toList(),
+        musicList: songs.where((s) => s.artist == "Artista 1").toList(),
       ),
     ];
   }
@@ -34,7 +34,7 @@ class MusicService {
     return [
       Playlist(
         id: 100, //mock data for testing, remove later
-        name: "Favorites",
+        name: "Favoritos",
         coverUrl: "",
         musicList: songs.take(2).toList(),
       ),
