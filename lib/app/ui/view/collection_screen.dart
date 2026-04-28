@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/album_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/playlist_viewmodel.dart';
+import 'package:music_player/app/ui/viewmodel/player_viewmodel.dart';
 import 'package:music_player/app/widgets/playlist_item.dart';
 import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:music_player/app/routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CollectionScreen extends StatefulWidget {
   final AlbumViewmodel albumViewmodel;
@@ -49,7 +51,13 @@ class _CollectionScreenState extends State<CollectionScreen> {
 
           return ListView(
             children: [
-              Text('Albums'),
+              Padding(
+                padding: EdgeInsets.only(left: 16),
+                child: Text(
+                  'Albums',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
               ...avm.albums.map((album) => PlaylistItem(
                 name: album.name,
                 coverUrl: album.coverUrl,
@@ -62,7 +70,13 @@ class _CollectionScreenState extends State<CollectionScreen> {
 
               Divider(),
 
-              Text('Playlists'),
+              Padding(
+                padding: EdgeInsets.only(left: 16),
+                child: Text(
+                  'Playlists',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
               ...plvm.playlists.map((playlist) => PlaylistItem(
                 name: playlist.name,
                 coverUrl: playlist.coverUrl ?? " ",
@@ -81,14 +95,20 @@ class _CollectionScreenState extends State<CollectionScreen> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          MiniPlayer(
-            isPlaying: false,
-            currTime: Duration.zero,
-            totalTime: Duration(minutes: 3, seconds: 30),
-            onPlayPause: () {},
-            onNext: () {},
-            onPrevious: () {},
-            onTap: () {},
+          ListenableBuilder(
+            listenable: context.watch<PlayerViewmodel>(),
+            builder: (context, child) {
+              final playerVm = context.read<PlayerViewmodel>();
+              return MiniPlayer(
+                isPlaying: playerVm.isPlaying,
+                currTime: playerVm.currDuration,
+                totalTime: playerVm.currentMusic?.duration ?? Duration.zero,
+                onPlayPause: () => playerVm.togglePlayPause(),
+                onNext: () => playerVm.next(),
+                onPrevious: () => playerVm.previous(),
+                onTap: () => context.go(Routes.player, extra: 1),
+              );
+            },
           ),
       
           BottomNavigationBar(

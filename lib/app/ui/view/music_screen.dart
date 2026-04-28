@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/music_viewmodel.dart';
+import 'package:music_player/app/ui/viewmodel/player_viewmodel.dart';
 import 'package:music_player/app/widgets/music_item.dart';
 import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:music_player/app/routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class MusicScreen extends StatefulWidget {
   final MusicViewmodel musicViewmodel;
@@ -46,7 +48,9 @@ class _MusicScreenState extends State<MusicScreen> {
                 name: music.name,
                 artist: music.artist,
                 duration: music.duration,
-                onPressed: () {},
+                onPressed: () {
+                  context.read<PlayerViewmodel>().play(music);
+                },
               );
             },
           );
@@ -56,14 +60,20 @@ class _MusicScreenState extends State<MusicScreen> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          MiniPlayer(
-            isPlaying: false,
-            currTime: Duration.zero,
-            totalTime: Duration(minutes: 3, seconds: 30),
-            onPlayPause: () {},
-            onNext: () {},
-            onPrevious: () {},
-            onTap: () {},
+          ListenableBuilder(
+            listenable: context.watch<PlayerViewmodel>(),
+            builder: (context, child) {
+              final playerVm = context.read<PlayerViewmodel>();
+              return MiniPlayer(
+                isPlaying: playerVm.isPlaying,
+                currTime: playerVm.currDuration,
+                totalTime: playerVm.currentMusic?.duration ?? Duration.zero,
+                onPlayPause: () => playerVm.togglePlayPause(),
+                onNext: () => playerVm.next(),
+                onPrevious: () => playerVm.previous(),
+                onTap: () => context.go(Routes.player, extra: 1),
+              );
+            },
           ),
           BottomNavigationBar(
             currentIndex: 1,

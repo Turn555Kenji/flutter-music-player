@@ -3,6 +3,9 @@ import 'package:music_player/app/data/models/music.dart';
 import 'package:music_player/app/widgets/music_item.dart';
 import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:go_router/go_router.dart';
+import 'package:music_player/app/ui/viewmodel/player_viewmodel.dart';
+import 'package:provider/provider.dart';
+import 'package:music_player/app/routes.dart';
 
 class InsideCollectionScreen extends StatelessWidget {
   final String name;
@@ -32,18 +35,27 @@ class InsideCollectionScreen extends StatelessWidget {
             name: music.name,
             artist: music.artist,
             duration: music.duration,
-            onPressed: () {},
+            onPressed: () {
+              context.read<PlayerViewmodel>().play(music);
+            },
           );
         },
       ),
-      bottomNavigationBar: MiniPlayer(
-        isPlaying: false,
-        currTime: Duration.zero,
-        totalTime: Duration(minutes: 3, seconds: 30),
-        onPlayPause: () {},
-        onNext: () {},
-        onPrevious: () {},
-        onTap: () {},
+      
+      bottomNavigationBar: ListenableBuilder(
+        listenable: context.watch<PlayerViewmodel>(),
+        builder: (context, child) {
+          final playerVm = context.read<PlayerViewmodel>();
+          return MiniPlayer(
+            isPlaying: playerVm.isPlaying,
+            currTime: playerVm.currDuration,
+            totalTime: playerVm.currentMusic?.duration ?? Duration.zero,
+            onPlayPause: () => playerVm.togglePlayPause(),
+            onNext: () => playerVm.next(),
+            onPrevious: () => playerVm.previous(),
+            onTap: () => context.go(Routes.player, extra: 1),
+          );
+        },
       )
     );
   }
