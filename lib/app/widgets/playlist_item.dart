@@ -22,11 +22,26 @@ class PlaylistItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            Container( //change to cover
+            if(coverUrl.isEmpty)
+                Container(
+                  width: 48,
+                  height: 48,
+                  color: Colors.grey,
+                  child: Icon(Icons.music_note),
+                ) else
+            Image.asset(
+              coverUrl,
               width: 48,
               height: 48,
-              color: Colors.grey,
-              child: Icon(Icons.music_note)
+              fit:BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 48,
+                  height: 48,
+                  color: Colors.grey,
+                  child: Icon(Icons.music_note),
+                );
+              }
             ),
             SizedBox(width: 12),
             Expanded(

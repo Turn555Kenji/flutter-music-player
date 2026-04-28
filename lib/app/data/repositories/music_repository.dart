@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/material.dart';
 import 'package:music_player/app/data/models/music.dart';
 import 'package:music_player/app/data/models/album.dart';
 import 'package:music_player/app/data/models/playlist.dart';
@@ -18,19 +19,32 @@ class MusicRepository {
   UnmodifiableListView<Playlist> get playlists => UnmodifiableListView(_playlists);
 
   Future<List<Music>> loadMusics() async {
-    final result = await _service.fetchMusics();
-    _musics.addAll(result);
-    return musics;
+    try{
+      final result = await _service.fetchMusics();
+      if (result.isEmpty) return musics;
+      _musics.addAll(result);
+      return musics;
+    } catch (e) {
+      debugPrint("Error fetching musics");
+      return musics;
+    }
   }
 
   Future<List<Album>> loadAlbums() async {
-    final result = await _service.fetchAlbums(_musics);
-    _albums.addAll(result);
-    return albums;
+    try{
+      final result = await _service.fetchAlbums(_musics);
+      if (result.isEmpty) return albums;
+      _albums.addAll(result);
+      return albums;
+    } catch (e) {
+      debugPrint("Error fetching albums");
+      return albums;
+    }
   }
 
-  Future<List<Playlist>> loadPlayLists() async {
+  Future<List<Playlist>> loadPlayLists() async { //Local
     final result = await _service.fetchPlaylists(_musics);
+    if (result.isEmpty) return playlists;
     _playlists.addAll(result);
     return playlists;
   }

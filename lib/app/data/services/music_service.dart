@@ -23,14 +23,13 @@ class MusicService {
         id: 1, 
         name: "Album 1",
         artist: "Artista 1",
-        coverUrl: "",
+        coverUrl: "assets/images/thumb1.png",
         musicList: songs.take(3).toList(),
       ),
     ];
   }
 
   Future<List<Playlist>> fetchPlaylists(List<Music> songs) async {
-    await Future.delayed(const Duration(milliseconds: 500));
     return [
       Playlist(
         id: 100, //mock data for testing, remove later
