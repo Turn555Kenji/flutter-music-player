@@ -5,6 +5,7 @@ import 'package:music_player/app/widgets/music_item.dart';
 import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:music_player/app/ui/viewmodel/player_viewmodel.dart';
+import 'package:music_player/app/ui/viewmodel/playlist_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:music_player/app/routes.dart';
 
@@ -12,12 +13,14 @@ class InsideCollectionScreen extends StatelessWidget {
   final String name;
   final List<Music> songs;
   final Playlist? playlist;
+  final PlaylistViewmodel? playlistViewmodel;
 
   const InsideCollectionScreen({
     super.key,
     required this.name,
     required this.songs,
-    this.playlist
+    this.playlist,
+    this.playlistViewmodel
   });
 
   @override
@@ -37,6 +40,14 @@ class InsideCollectionScreen extends StatelessWidget {
                 Routes.createPlaylist,
                 extra: playlist,
               )
+            ),
+          if (playlist != null)
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                playlistViewmodel!.deletePlaylist(playlist!.id);
+                context.pop();
+              },
             )
         ],
       ),

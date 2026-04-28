@@ -47,6 +47,10 @@ class MusicRepository {
     i=i+1;
   }
 
+  void deletePlaylist(int id) {
+    _playlists.removeWhere((pl) => pl.id == id);
+  }     
+
   void addToPlaylist(int playlistId, Music song) {
     final index = _playlists.indexWhere((pl) => pl.id == playlistId); //iterates over _playlists with pl
     if (index == -1) return;
@@ -84,7 +88,7 @@ class MusicRepository {
   void updatePlaylist(int id, String name, List<Music> songs) {
     final index = _playlists.indexWhere((pl) => pl.id == id);
     if (index == -1) return;
-    
+
     _playlists[index] = Playlist(
       id: id,
       name: name,

@@ -63,7 +63,8 @@ final routes = GoRouter(
           return InsideCollectionScreen(
             name: playlist.name,
             songs: playlist.musicList,
-            playlist: playlist
+            playlist: playlist,
+            playlistViewmodel: context.read()
           );
         }
       },

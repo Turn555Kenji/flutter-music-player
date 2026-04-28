@@ -23,6 +23,11 @@ class PlaylistViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deletePlaylist(int id) {
+    musicRepository.deletePlaylist(id);
+    notifyListeners();
+  } 
+
   void addToPlaylist(int playlistId, Music music) {
     musicRepository.addToPlaylist(playlistId, music);
     notifyListeners();
