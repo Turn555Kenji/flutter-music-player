@@ -1,17 +1,27 @@
-# music_player
+# Flutter Music Player
 
-A new Flutter project.
+Projeto desenvolvido para a disciplina de Programação De Dispositivos Móveis
 
-## Getting Started
+## Autoria
 
-This project is a starting point for a Flutter application.
+Kenji Henrique Ueyama Yashinishi
 
-A few resources to get you started if this is your first Flutter project:
+## Sobre o projeto
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Este programa feito em flutter tem como objetivo o aprendizado da ferramenta, incorporando ela com padrões de desenvolvimento, UX e arquitetura do fluxo de dados.
+Trata-se de um aplicativo de músicas, podendo carregar elas individualmente, ou em coleções na forma de playlists ou álbuns
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Particularidades
+
+- O padrão adotado para seu desenvolvimento é o MVVM, sendo separado em camadas de Visualização e Dados.
+- CRUD na forma de playlists.
+  - Faz uso de formulário para sua criação.
+  - Obriga um nome para a playlist, exibindo uma mensagem de erro na interface caso inexistente.
+- Dados são atualmente apenas estáticos, portanto, qualquer interação com o Back-end é apenas por meio de mocks.
+  - Dados que serão futuramente requisitados via API possuem tratamento de erros, e são formatados para seu respectivo tipo ao ser recebido.
+
+### Adições futuras
+
+- Interação com APIs de música reais.
+- Reestruturação das Views por meio de uma tela principal que conterá a Navbar.
+- Implementação do playback e queue de músicas.
