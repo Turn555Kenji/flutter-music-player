@@ -17,10 +17,9 @@ class PlaylistViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createPlaylist(String name) {
-    musicRepository.createPlaylist(name);
+  void createPlaylist(String name, List<Music> musics) {
+    musicRepository.createPlaylist(name, musics);
     notifyListeners();
-    load();
   }
 
   void addToPlaylist(int playlistId, Music music) {

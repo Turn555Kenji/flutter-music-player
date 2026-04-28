@@ -24,7 +24,7 @@ class MusicService {
         name: "Album 1",
         artist: "Artista 1",
         coverUrl: "",
-        musicList: songs.where((s) => s.artist == "Artista 1").toList(),
+        musicList: songs.take(3).toList(),
       ),
     ];
   }

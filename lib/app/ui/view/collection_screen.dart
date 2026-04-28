@@ -37,7 +37,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Playlists')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => context.push(Routes.createPlaylist),
         child: Icon(Icons.add),
       ),
       body: ListenableBuilder(
@@ -54,7 +54,10 @@ class _CollectionScreenState extends State<CollectionScreen> {
                 name: album.name,
                 coverUrl: album.coverUrl,
                 details: album.artist,
-                onPressed: () {},
+                onPressed: () => context.push(
+                  Routes.insideCollection,
+                  extra: album
+                ),
               )),
 
               Divider(),
@@ -64,7 +67,10 @@ class _CollectionScreenState extends State<CollectionScreen> {
                 name: playlist.name,
                 coverUrl: playlist.coverUrl ?? " ",
                 details: '${playlist.musicList.length} items',
-                onPressed: () {},
+                onPressed: () => context.push(
+                  Routes.insideCollection,
+                  extra: playlist
+                ),
               ))
             ],
           );

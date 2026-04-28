@@ -35,13 +35,13 @@ class MusicRepository {
     return playlists;
   }
 
-  void createPlaylist(String name) {
+  void createPlaylist(String name, List<Music> musics) {
     _playlists.add(
       Playlist(
         id: i,
         name: name,
         coverUrl: "",
-        musicList: [],
+        musicList: musics, //add music later
       ),
     );
     i=i+1;
