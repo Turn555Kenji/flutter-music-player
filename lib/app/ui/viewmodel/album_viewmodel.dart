@@ -11,6 +11,7 @@ class AlbumViewmodel extends ChangeNotifier {
   AlbumViewmodel({required this.musicRepository});
 
   void load() async {
+    if(isLoaded) return;
     albums = await musicRepository.loadAlbums();
     isLoaded = true;
     notifyListeners();

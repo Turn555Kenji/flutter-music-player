@@ -12,6 +12,7 @@ class PlaylistViewmodel extends ChangeNotifier {
   PlaylistViewmodel({required this.musicRepository});
 
   void load() async {
+    if(isLoaded) return;
     playlists = await musicRepository.loadPlayLists();
     isLoaded = true;
     notifyListeners();
