@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/data/models/music.dart';
+import 'package:music_player/app/data/models/playlist.dart';
 import 'package:music_player/app/widgets/music_item.dart';
 import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:go_router/go_router.dart';
@@ -10,11 +11,13 @@ import 'package:music_player/app/routes.dart';
 class InsideCollectionScreen extends StatelessWidget {
   final String name;
   final List<Music> songs;
+  final Playlist? playlist;
 
   const InsideCollectionScreen({
     super.key,
     required this.name,
     required this.songs,
+    this.playlist
   });
 
   @override
@@ -26,6 +29,16 @@ class InsideCollectionScreen extends StatelessWidget {
           icon: Icon(Icons.close),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          if (playlist != null)
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () => context.push(
+                Routes.createPlaylist,
+                extra: playlist,
+              )
+            )
+        ],
       ),
       body: ListView.builder(
         itemCount: songs.length,

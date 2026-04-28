@@ -38,10 +38,14 @@ final routes = GoRouter(
     ),
     GoRoute(
       path: Routes.createPlaylist,
-      builder: (context, state) => CreatePlaylistScreen(
-        musicViewmodel: context.read(),
-        playlistViewmodel: context.read(),
-      ),
+      builder: (context, state) {
+        final playlist = state.extra as Playlist?;
+        return CreatePlaylistScreen(
+          musicViewmodel: context.read(),
+          playlistViewmodel: context.read(),
+          playlist: playlist
+        );
+      }
     ),
     GoRoute(
       path: Routes.insideCollection,
@@ -51,6 +55,7 @@ final routes = GoRouter(
           return InsideCollectionScreen(
             name: extra.name,
             songs: extra.musicList,
+            playlist: null
           );
         }
         else{
@@ -58,6 +63,7 @@ final routes = GoRouter(
           return InsideCollectionScreen(
             name: playlist.name,
             songs: playlist.musicList,
+            playlist: playlist
           );
         }
       },

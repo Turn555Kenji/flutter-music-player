@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:music_player/app/data/models/music.dart';
+import 'package:music_player/app/data/models/playlist.dart';
 import 'package:music_player/app/ui/viewmodel/music_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/playlist_viewmodel.dart';
 
 class CreatePlaylistScreen extends StatefulWidget {
   final MusicViewmodel musicViewmodel;
   final PlaylistViewmodel playlistViewmodel;
+  final Playlist? playlist;
 
   const CreatePlaylistScreen({
     super.key,
     required this.musicViewmodel,
     required this.playlistViewmodel,
+    this.playlist,
   });
 
   @override
@@ -28,6 +31,10 @@ class _CreatePlaylistScreenState extends State<CreatePlaylistScreen> {
   void initState() {
     super.initState();
     widget.musicViewmodel.load();
+    if (widget.playlist != null) {
+      name.text = widget.playlist!.name;
+      selectedMusic.addAll(widget.playlist!.musicList);
+    }
   }
 
   @override
@@ -49,10 +56,18 @@ class _CreatePlaylistScreenState extends State<CreatePlaylistScreen> {
 
   void save() {
     if (formKey.currentState!.validate()) {
-      widget.playlistViewmodel.createPlaylist(
-        name.text,
-        selectedMusic,
-      );
+      if(widget.playlist != null){
+        widget.playlistViewmodel.updatePlaylist(
+          widget.playlist!.id,
+          name.text,
+          selectedMusic
+        );
+      } else {
+        widget.playlistViewmodel.createPlaylist(
+          name.text,
+          selectedMusic,
+        );
+      }
       context.pop();
     }
   }
@@ -63,7 +78,7 @@ class _CreatePlaylistScreenState extends State<CreatePlaylistScreen> {
     return Scaffold(
 
       appBar: AppBar(
-        title: Text('Create Playlist'),
+        title: Text('Editing Playlist'),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () => context.pop(),

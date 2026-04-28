@@ -80,4 +80,16 @@ class MusicRepository {
       musicList: updatedSongs,
     );
   }
+
+  void updatePlaylist(int id, String name, List<Music> songs) {
+    final index = _playlists.indexWhere((pl) => pl.id == id);
+    if (index == -1) return;
+    
+    _playlists[index] = Playlist(
+      id: id,
+      name: name,
+      coverUrl: _playlists[index].coverUrl,
+      musicList: songs,
+    );
+  }
 }

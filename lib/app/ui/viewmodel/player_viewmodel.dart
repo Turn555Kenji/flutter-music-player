@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/data/models/music.dart';
-import 'package:music_player/app/data/repositories/music_repository.dart';
 
 class PlayerViewmodel extends ChangeNotifier {
   bool isPlaying = false;

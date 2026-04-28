@@ -32,4 +32,9 @@ class PlaylistViewmodel extends ChangeNotifier {
     musicRepository.removeFromPlaylist(playlistId, music);
     notifyListeners();
   }
+
+  void updatePlaylist(int id, String name, List<Music> songs) {
+    musicRepository.updatePlaylist(id, name, songs);
+    notifyListeners();
+  }
 }
