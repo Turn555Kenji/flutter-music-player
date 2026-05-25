@@ -23,7 +23,9 @@ final routes = GoRouter(
   routes: [
     GoRoute(
       path: Routes.login,
-      builder: (context, state) => LoginScreen(),
+      builder: (context, state) => LoginScreen(
+        authViewmodel: context.read(),
+      ),
     ),
     GoRoute(
       path: Routes.musics,
