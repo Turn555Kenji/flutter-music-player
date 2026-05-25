@@ -5,21 +5,21 @@ class DatabaseService {
 
   // ─── Users ───────────────────────────────────────────
 
-  Future<int> insertUser(String email, String password) async {
+  Future<int> insertUser(String username, String password) async {
     final db = await _helper.database;
     return await db.insert('Users', {
-      'email': email,
+      'username': username,
       'password': password,
       'created_at': DateTime.now().toIso8601String(),
     });
   }
 
-  Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+  Future<Map<String, dynamic>?> getUserByName(String username) async {
     final db = await _helper.database;
     final result = await db.query(
       'Users',
-      where: 'email = ?',
-      whereArgs: [email],
+      where: 'username = ?',
+      whereArgs: [username],
     );
     return result.isNotEmpty ? result.first : null;
   }
@@ -66,7 +66,7 @@ class DatabaseService {
       where: 'id = ?',
       whereArgs: [id],
     );
-    // also delete all songs in the playlist
+    // delete all music
     await db.delete(
       'PlaylistSongs',
       where: 'playlist_id = ?',

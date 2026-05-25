@@ -30,7 +30,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE Users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT NOT NULL UNIQUE,
+        username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         created_at TEXT NOT NULL
       )
