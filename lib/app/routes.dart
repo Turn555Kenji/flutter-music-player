@@ -3,12 +3,14 @@ import 'package:music_player/app/data/models/album.dart';
 import 'package:music_player/app/data/models/playlist.dart';
 import 'package:music_player/app/ui/view/create_playlist_screen.dart';
 import 'package:music_player/app/ui/view/music_screen.dart';
+import 'package:music_player/app/ui/view/login_screen.dart';
 import 'package:music_player/app/ui/view/collection_screen.dart';
 import 'package:music_player/app/ui/view/player_screen.dart';
 import 'package:music_player/app/ui/view/inside_collection_screen.dart';
 import 'package:provider/provider.dart';
 
 final class Routes {
+  static const login = '/login';
   static const musics = '/musics';
   static const collections = '/collections';
   static const player = '/player';
@@ -17,8 +19,12 @@ final class Routes {
 }
 
 final routes = GoRouter(
-  initialLocation: Routes.musics,
+  initialLocation: Routes.login,
   routes: [
+    GoRoute(
+      path: Routes.login,
+      builder: (context, state) => LoginScreen(),
+    ),
     GoRoute(
       path: Routes.musics,
       builder: (context, state) => MusicScreen(
