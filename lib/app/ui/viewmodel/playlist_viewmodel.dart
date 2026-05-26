@@ -4,42 +4,34 @@ import 'package:music_player/app/data/models/playlist.dart';
 import 'package:music_player/app/data/repositories/music_repository.dart';
 
 class PlaylistViewmodel extends ChangeNotifier {
-  bool isLoaded = false;
-
-  List<Playlist> playlists = [];
   final MusicRepository musicRepository;
+  bool isLoaded = false;
+  List<Playlist> playlists = [];
 
   PlaylistViewmodel({required this.musicRepository});
 
   void load() async {
-    if(isLoaded) return;
-    playlists = await musicRepository.loadPlayLists();
+    if (isLoaded) return;
+    playlists = await musicRepository.loadPlaylists();
     isLoaded = true;
     notifyListeners();
   }
 
-  void createPlaylist(String name, List<Music> musics) {
-    musicRepository.createPlaylist(name, musics);
-    notifyListeners();
+  void createPlaylist(String name, String description, List<Music> songs) async {
+    await musicRepository.createPlaylist(name, description, songs);
+    isLoaded = false;
+    load();
   }
 
-  void deletePlaylist(int id) {
-    musicRepository.deletePlaylist(id);
-    notifyListeners();
-  } 
-
-  void addToPlaylist(int playlistId, Music music) {
-    musicRepository.addToPlaylist(playlistId, music);
-    notifyListeners();
+  void updatePlaylist(int id, String name, String description, List<Music> songs) async {
+    await musicRepository.updatePlaylist(id, name, description, songs);
+    isLoaded = false;
+    load();
   }
 
-  void removeFromPlaylist(int playlistId, Music music) {
-    musicRepository.removeFromPlaylist(playlistId, music);
-    notifyListeners();
-  }
-
-  void updatePlaylist(int id, String name, List<Music> songs) {
-    musicRepository.updatePlaylist(id, name, songs);
-    notifyListeners();
+  void deletePlaylist(int id) async {
+    await musicRepository.deletePlaylist(id);
+    isLoaded = false;
+    load();
   }
 }

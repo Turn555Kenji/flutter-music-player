@@ -60,11 +60,13 @@ class _CreatePlaylistScreenState extends State<CreatePlaylistScreen> {
         widget.playlistViewmodel.updatePlaylist(
           widget.playlist!.id,
           name.text,
+          description.text,
           selectedMusic
         );
       } else {
         widget.playlistViewmodel.createPlaylist(
           name.text,
+          description.text,
           selectedMusic,
         );
       }

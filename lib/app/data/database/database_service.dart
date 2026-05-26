@@ -3,7 +3,7 @@ import 'package:music_player/app/data/database/database_helper.dart';
 class DatabaseService {
   final DatabaseHelper _helper = DatabaseHelper();
 
-  // ─── Users ───────────────────────────────────────────
+  // ─── Users ─────────────────────────────────────────────────────────────────────────────────────────
 
   Future<int> insertUser(String username, String password) async {
     final db = await _helper.database;
@@ -24,7 +24,7 @@ class DatabaseService {
     return result.isNotEmpty ? result.first : null;
   }
 
-  // ─── Playlists ────────────────────────────────────────
+  // ─── Playlists ─────────────────────────────────────────────────────────────────────────────────────────
 
   Future<int> insertPlaylist(int userId, String name, String? description, String? coverUrl) async {
     final db = await _helper.database;
@@ -74,7 +74,7 @@ class DatabaseService {
     );
   }
 
-  // ─── PlaylistSongs ────────────────────────────────────
+  // ─── PlaylistSongs ─────────────────────────────────────────────────────────────────────────────────────────
 
   Future<void> insertPlaylistSong(int playlistId, String songPath, int position) async {
     final db = await _helper.database;

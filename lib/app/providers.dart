@@ -17,7 +17,9 @@ final providers = [
     ),
   ),
   Provider<MusicRepository>(
-    create: (context) => MusicRepository(),
+    create: (context) => MusicRepository(
+      authRepository: context.read(),
+    ),
   ),
   ChangeNotifierProvider<MusicViewmodel>(
     create: (context) => MusicViewmodel(

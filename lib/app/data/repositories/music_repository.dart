@@ -1,113 +1,119 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
+import 'package:music_player/app/data/database/database_service.dart';
 import 'package:music_player/app/data/models/music.dart';
 import 'package:music_player/app/data/models/album.dart';
 import 'package:music_player/app/data/models/playlist.dart';
+import 'package:music_player/app/data/repositories/authentication_repository.dart';
 import 'package:music_player/app/data/services/music_service.dart';
-
-int i = 1; //Replace later for real IDs
 
 class MusicRepository {
   final MusicService _service = MusicService();
+  final DatabaseService _databaseService = DatabaseService();
+  final AuthRepository authRepository;
+
   final List<Music> _musics = [];
   final List<Album> _albums = [];
-  final List<Playlist> _playlists = [];
+
+  MusicRepository({required this.authRepository});
 
   UnmodifiableListView<Music> get musics => UnmodifiableListView(_musics);
   UnmodifiableListView<Album> get albums => UnmodifiableListView(_albums);
-  UnmodifiableListView<Playlist> get playlists => UnmodifiableListView(_playlists);
 
   Future<List<Music>> loadMusics() async {
-    try{
+    try {
       final result = await _service.fetchMusics();
       if (result.isEmpty) return musics;
+      _musics.clear();
       _musics.addAll(result);
       return musics;
     } catch (e) {
-      debugPrint("Error fetching musics");
+      debugPrint('Error fetching musics: $e');
       return musics;
     }
   }
 
   Future<List<Album>> loadAlbums() async {
-    try{
+    try {
       final result = await _service.fetchAlbums(_musics);
       if (result.isEmpty) return albums;
+      _albums.clear();
       _albums.addAll(result);
       return albums;
     } catch (e) {
-      debugPrint("Error fetching albums");
+      debugPrint('Error fetching albums: $e');
       return albums;
     }
   }
 
-  Future<List<Playlist>> loadPlayLists() async { //Local
-    final result = await _service.fetchPlaylists(_musics);
-    if (result.isEmpty) return playlists;
-    _playlists.addAll(result);
+  Future<List<Playlist>> loadPlaylists() async {
+    if (_musics.isEmpty) {
+      await loadMusics(); // music must load first
+    }
+
+    final userId = authRepository.currentUserId;
+    if (userId == null) return [];
+
+    final playlistMaps = await _databaseService.getPlaylists(userId);
+    final playlists = <Playlist>[];
+
+    for (final map in playlistMaps) {
+      final songMaps = await _databaseService.getPlaylistSongs(map['id'] as int);
+      
+      // match song paths to actual Music objects
+      final songs = songMaps.map((songMap) {
+        return _musics.firstWhere(
+          (m) => m.id.toString() == songMap['song_path'],
+          orElse: () => _musics.first,
+        );
+      }).toList();
+
+      playlists.add(Playlist(
+        id: map['id'] as int,
+        name: map['name'] as String,
+        coverUrl: map['cover_url'] as String? ?? '',
+        musicList: songs,
+      ));
+    }
+
     return playlists;
   }
 
-  void createPlaylist(String name, List<Music> musics) {
-    _playlists.add(
-      Playlist(
-        id: i,
-        name: name,
-        coverUrl: "",
-        musicList: musics, //add music later
-      ),
+  Future<void> createPlaylist(String name, String description, List<Music> songs) async {
+    final userId = authRepository.currentUserId;
+    if (userId == null) return;
+
+    final playlistId = await _databaseService.insertPlaylist(
+      userId,
+      name,
+      description,
+      null,
     );
-    i=i+1;
+
+    for (int i = 0; i < songs.length; i++) {
+      await _databaseService.insertPlaylistSong(
+        playlistId,
+        songs[i].id.toString(), // store id as path for now
+        i,
+      );
+    }
   }
 
-  void deletePlaylist(int id) {
-    _playlists.removeWhere((pl) => pl.id == id);
-  }     
+  Future<void> updatePlaylist(int id, String name, String description, List<Music> songs) async {
+    await _databaseService.updatePlaylist(id, name, description);
 
-  void addToPlaylist(int playlistId, Music song) {
-    final index = _playlists.indexWhere((pl) => pl.id == playlistId); //iterates over _playlists with pl
-    if (index == -1) return;
-
-    final playlist = _playlists[index];
-
-    // musica ja existe na pl
-    final alreadyExists = playlist.musicList.any((m) => m.id == song.id);
-    if (alreadyExists) return;
-
-    _playlists[index] = Playlist(
-      id: playlist.id,
-      name: playlist.name,
-      coverUrl: playlist.coverUrl,
-      musicList: [...playlist.musicList, song],
-    );
+    // delete old songs and reinsert
+    await _databaseService.deletePlaylistSongs(id);
+    for (int i = 0; i < songs.length; i++) {
+      await _databaseService.insertPlaylistSong(
+        id,
+        songs[i].id.toString(),
+        i,
+      );
+    }
   }
 
-  void removeFromPlaylist(int playlistId, Music song) {
-    final index = _playlists.indexWhere((pl) => pl.id == playlistId);
-    if (index == -1) return;
-
-    final playlist = _playlists[index];
-
-    final updatedSongs = playlist.musicList.where((m) => m.id != song.id).toList();
-
-    _playlists[index] = Playlist(
-      id: playlist.id,
-      name: playlist.name,
-      coverUrl: playlist.coverUrl,
-      musicList: updatedSongs,
-    );
-  }
-
-  void updatePlaylist(int id, String name, List<Music> songs) {
-    final index = _playlists.indexWhere((pl) => pl.id == id);
-    if (index == -1) return;
-
-    _playlists[index] = Playlist(
-      id: id,
-      name: name,
-      coverUrl: _playlists[index].coverUrl,
-      musicList: songs,
-    );
+  Future<void> deletePlaylist(int id) async {
+    await _databaseService.deletePlaylist(id);
   }
 }
