@@ -25,6 +25,7 @@ Trata-se de um aplicativo de músicas, podendo carregar elas individualmente, ou
 - Interação com APIs de música reais.
 - Reestruturação das Views por meio de uma tela principal que conterá a Navbar.
 - Implementação do playback e queue de músicas.
+- Reajustar plugins para acomodar versões mais recentes do flutter/gradlew
 
 ## Instalação
 
@@ -38,6 +39,7 @@ O aplicativo pode ser instalado de duas formas, via apk na release ou via flutte
 
 > [!Aviso]
 > Certifique-se de que você tem o flutter configurado na sua máquina, caso contrário, os comandos não irão funcionar.
+> O software precisa do JDK-17 instalado, certifique-se de que ele foi instalado e indique o diretório onde ele foi instalado em gradle.properties .
 1. Habilite o modo desenvolvedor e debug via USB no seu dispositivo móvel, é recomendado ao leitor pesquisar como fazer isto de acordo com o modelo do seu celular.
 2. Baixe o código fonte neste página.
 3. Extraia o arquivo em algum local da sua máquina.

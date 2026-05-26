@@ -26,9 +26,9 @@ class MusicService {
       ignoreCase: true,
     );
 
-    // Filter to only songs inside the /Music folder
+    // filter to /Music
     final filtered = songs.where((song) =>
-      song.data?.contains('/Music') ?? false
+      song.data.contains('/Music')
     ).toList();
 
     return filtered.map((song) => Music(
