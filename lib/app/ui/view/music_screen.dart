@@ -45,6 +45,7 @@ class _MusicScreenState extends State<MusicScreen> {
               final music = vm.musics[index];
 
               return MusicItem(
+                id: music.id,
                 name: music.name,
                 artist: music.artist,
                 duration: music.duration,

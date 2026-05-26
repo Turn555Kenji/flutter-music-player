@@ -56,6 +56,7 @@ class InsideCollectionScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final music = songs[index];
           return MusicItem(
+            id: music.id,
             name: music.name,
             artist: music.artist,
             duration: music.duration,

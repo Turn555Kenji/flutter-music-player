@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class PlaylistItem extends StatelessWidget {
+  final int id;
   final String name;
   final String coverUrl;
   final String details;
@@ -8,6 +10,7 @@ class PlaylistItem extends StatelessWidget {
 
   const PlaylistItem({
     super.key,
+    required this.id,
     required this.name,
     required this.coverUrl,
     required this.details,
@@ -22,26 +25,18 @@ class PlaylistItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            if(coverUrl.isEmpty)
-                Container(
-                  width: 48,
-                  height: 48,
-                  color: Colors.grey,
-                  child: Icon(Icons.music_note),
-                ) else
-            Image.asset(
-              coverUrl,
-              width: 48,
-              height: 48,
-              fit:BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 48,
-                  height: 48,
-                  color: Colors.grey,
-                  child: Icon(Icons.music_note),
-                );
-              }
+            QueryArtworkWidget(
+              id: id,
+              type: ArtworkType.ALBUM,
+              nullArtworkWidget: Container(
+                width: 48,
+                height: 48,
+                color: Colors.grey,
+                child: Icon(Icons.music_note),
+              ),
+              artworkWidth: 48,
+              artworkHeight: 48,
+              artworkFit: BoxFit.cover,
             ),
             SizedBox(width: 12),
             Expanded(
@@ -57,11 +52,11 @@ class PlaylistItem extends StatelessWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
-              )
-            )
+              ),
+            ),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }

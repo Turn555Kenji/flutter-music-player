@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class MusicItem extends StatelessWidget {
+  final int id;
   final String name;
   final String artist;
   final Duration duration;
@@ -8,6 +10,7 @@ class MusicItem extends StatelessWidget {
 
   const MusicItem({
     super.key,
+    required this.id,
     required this.name,
     required this.artist,
     required this.duration,
@@ -28,11 +31,18 @@ class MusicItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              color: Colors.grey,
-              child: Icon(Icons.music_note)
+            QueryArtworkWidget(
+              id: id,
+              type: ArtworkType.AUDIO,
+              nullArtworkWidget: Container(
+                width: 48,
+                height: 48,
+                color: Colors.grey,
+                child: Icon(Icons.music_note),
+              ),
+              artworkWidth: 48,
+              artworkHeight: 48,
+              artworkFit: BoxFit.cover,
             ),
             SizedBox(width: 12),
             Expanded(

@@ -1,42 +1,67 @@
+import 'package:on_audio_query/on_audio_query.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:music_player/app/data/models/music.dart';
 import 'package:music_player/app/data/models/album.dart';
-import 'package:music_player/app/data/models/playlist.dart';
 
 class MusicService {
-  // Devolve dados mock
+  final OnAudioQuery _audioQuery = OnAudioQuery();
+
+  Future<bool> requestPermission() async {
+    final status = await Permission.audio.request();
+    if (status.isDenied) {
+      final storageStatus = await Permission.storage.request();
+      return storageStatus.isGranted;
+    }
+    return status.isGranted;
+  }
+
   Future<List<Music>> fetchMusics() async {
-    await Future.delayed(Duration(seconds: 2));
-    return [
-      Music(id: 1, artist: "1",duration: Duration(minutes: 1, seconds: 35),name: "1"),
-      Music(id: 2, artist: "2",duration: Duration(minutes: 2, seconds: 35),name: "2"),
-      Music(id: 3, artist: "3",duration: Duration(minutes: 3, seconds: 35),name: "3"),
-      Music(id: 4, artist: "4",duration: Duration(minutes: 4, seconds: 35),name: "4"),
-      Music(id: 5, artist: "5",duration: Duration(minutes: 5, seconds: 35),name: "5"),
-    ];
+    final granted = await requestPermission();
+    if (!granted) return [];
+
+    final songs = await _audioQuery.querySongs(
+      sortType: SongSortType.TITLE,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
+
+    // Filter to only songs inside the /Music folder
+    final filtered = songs.where((song) =>
+      song.data?.contains('/Music') ?? false
+    ).toList();
+
+    return filtered.map((song) => Music(
+      id: song.id,
+      name: song.title,
+      artist: song.artist ?? 'Unknown Artist',
+      duration: Duration(milliseconds: song.duration ?? 0),
+    )).toList();
   }
 
   Future<List<Album>> fetchAlbums(List<Music> songs) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    final granted = await requestPermission();
+    if (!granted) return [];
 
-    return [
-      Album(
-        id: 1, 
-        name: "Album 1",
-        artist: "Artista 1",
-        coverUrl: "assets/images/thumb1.png",
-        musicList: songs.take(3).toList(),
-      ),
-    ];
-  }
+    final albums = await _audioQuery.queryAlbums(
+      sortType: AlbumSortType.ALBUM,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
 
-  Future<List<Playlist>> fetchPlaylists(List<Music> songs) async {
-    return [
-      Playlist(
-        id: 100, //mock data for testing, remove later
-        name: "Favoritos",
-        coverUrl: "",
-        musicList: songs.take(2).toList(),
-      ),
-    ];
+    return albums.map((album) {
+      final albumSongs = songs
+          .where((s) => s.artist == album.artist)
+          .toList();
+
+      return Album(
+        id: album.id,
+        name: album.album,
+        artist: album.artist ?? 'Unknown Artist',
+        coverUrl: album.id.toString(),
+        musicList: albumSongs,
+      );
+    }).toList();
   }
 }

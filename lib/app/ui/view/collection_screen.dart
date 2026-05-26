@@ -59,6 +59,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                 ),
               ),
               ...avm.albums.map((album) => PlaylistItem(
+                id: album.id,
                 name: album.name,
                 coverUrl: album.coverUrl,
                 details: album.artist,
@@ -78,6 +79,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                 ),
               ),
               ...plvm.playlists.map((playlist) => PlaylistItem(
+                id: playlist.id,
                 name: playlist.name,
                 coverUrl: playlist.coverUrl ?? " ",
                 details: '${playlist.musicList.length} items',
