@@ -31,14 +31,14 @@ Trata-se de um aplicativo de músicas, podendo carregar elas individualmente, ou
 
 O aplicativo pode ser instalado de duas formas, via apk na release ou via flutter através da source code.
 
-#Via APK
+# Via APK
 
 - Na aba releases, baixe o .apk disponível e abra este arquivo no celular, isto irá instalar o aplicativo em seu android.
 
-#Via Flutter
+# Via Flutter
 
-> [!Aviso]
-> Certifique-se de que você tem o flutter configurado na sua máquina, caso contrário, os comandos não irão funcionar.
+# Aviso
+> Certifique-se de que você tem o flutter configurado na sua máquina, caso contrário, os comandos não irão funcionar. <br><br>
 > O software precisa do JDK-17 instalado, certifique-se de que ele foi instalado e indique o diretório onde ele foi instalado em gradle.properties .
 1. Habilite o modo desenvolvedor e debug via USB no seu dispositivo móvel, é recomendado ao leitor pesquisar como fazer isto de acordo com o modelo do seu celular.
 2. Baixe o código fonte neste página.
