@@ -61,7 +61,7 @@ class InsideCollectionScreen extends StatelessWidget {
             artist: music.artist,
             duration: music.duration,
             onPressed: () {
-              context.read<PlayerViewmodel>().play(music);
+              context.read<PlayerViewmodel>().play(music, musicQueue: songs);
             },
           );
         },

@@ -36,6 +36,7 @@ class MusicService {
       name: song.title,
       artist: song.artist ?? 'Unknown Artist',
       duration: Duration(milliseconds: song.duration ?? 0),
+      coverUrl: song.data,
     )).toList();
   }
 

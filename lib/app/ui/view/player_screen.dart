@@ -8,6 +8,12 @@ class PlayerScreen extends StatelessWidget {
 
   const PlayerScreen({super.key});
 
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -15,7 +21,7 @@ class PlayerScreen extends StatelessWidget {
       builder: (context, child) {
         final playerVm = context.read<PlayerViewmodel>();
         final music = playerVm.currentMusic;
-
+        
 
         return Scaffold(
           appBar: AppBar(
@@ -43,14 +49,27 @@ class PlayerScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 32),
 
-                LinearProgressIndicator(value: 0.0),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('0:00'),
-                    Text('3:30'),
-                  ],
+                Slider(
+                  value: playerVm.currDuration.inSeconds.toDouble().clamp(
+                        0,
+                        playerVm.totalDuration.inSeconds.toDouble(),
+                      ),
+                  max: playerVm.totalDuration.inSeconds.toDouble() == 0
+                      ? 1
+                      : playerVm.totalDuration.inSeconds.toDouble(),
+                  onChanged: (value) {
+                    playerVm.seek(Duration(seconds: value.toInt()));
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(_formatDuration(playerVm.currDuration)),
+                      Text(_formatDuration(playerVm.totalDuration)),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 32),
 
