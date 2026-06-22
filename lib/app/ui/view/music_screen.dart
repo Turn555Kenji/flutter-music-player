@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/music_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/player_viewmodel.dart';
+import 'package:music_player/app/ui/viewmodel/login_viewmodel.dart';
 import 'package:music_player/app/widgets/music_item.dart';
 import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:music_player/app/routes.dart';
@@ -31,7 +32,19 @@ class _MusicScreenState extends State<MusicScreen> {
   Widget build(BuildContext context) {
     final vm = widget.musicViewmodel;
     return Scaffold(
-      appBar: AppBar(title: Text('Music Player')),
+      appBar: AppBar(
+        title: Text('Music Player'), 
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await context.read<AuthViewmodel>().logout();
+              if (!context.mounted) return;
+              context.go(Routes.login);
+            },
+          ),
+        ],
+      ),
       body: ListenableBuilder(
         listenable: vm, 
         builder: (context, child) {

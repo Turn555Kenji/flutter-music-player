@@ -4,6 +4,7 @@ import 'package:music_player/app/data/repositories/authentication_repository.dar
 class AuthViewmodel extends ChangeNotifier {
   final AuthRepository authRepository;
 
+  bool isCheckingSession = true;
   bool isLoading = false;
   String? errorMessage;
 
@@ -44,8 +45,18 @@ class AuthViewmodel extends ChangeNotifier {
     return success;
   }
 
-  void logout() {
-    authRepository.logout();
+  Future<void> checkSession() async {
+    isCheckingSession = true;
+    notifyListeners();
+
+    await authRepository.checkSession();
+
+    isCheckingSession = false;
+    notifyListeners();
+  }
+
+  Future<void> logout() async {
+    await authRepository.logout();
     notifyListeners();
   }
 }

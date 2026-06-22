@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_player/app/ui/viewmodel/album_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/playlist_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/player_viewmodel.dart';
+import 'package:music_player/app/ui/viewmodel/login_viewmodel.dart';
 import 'package:music_player/app/widgets/playlist_item.dart';
 import 'package:music_player/app/widgets/miniplayer.dart';
 import 'package:music_player/app/routes.dart';
@@ -37,7 +38,19 @@ class _CollectionScreenState extends State<CollectionScreen> {
     final plvm = widget.playlistViewmodel;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Playlists')),
+      appBar: AppBar(
+        title: Text('Playlists'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await context.read<AuthViewmodel>().logout();
+              if (!context.mounted) return;
+              context.go(Routes.login);
+            },
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(Routes.createPlaylist),
         child: Icon(Icons.add),

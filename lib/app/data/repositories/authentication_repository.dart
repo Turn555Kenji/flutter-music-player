@@ -1,7 +1,9 @@
 import 'package:music_player/app/data/database/database_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
   final DatabaseService _databaseService = DatabaseService();
+  static const _userIdKey = 'userId';
 
   int? _currentUserId;
 
@@ -15,6 +17,9 @@ class AuthRepository {
     if (user['password'] != password) return false;
 
     _currentUserId = user['id'] as int;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_userIdKey, _currentUserId!);
     return true;
   }
 
@@ -24,10 +29,25 @@ class AuthRepository {
 
     final id = await _databaseService.insertUser(username, password);
     _currentUserId = id;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_userIdKey, _currentUserId!);
     return true;
   }
 
-  void logout() {
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userIdKey);
     _currentUserId = null;
+  }
+
+  Future<bool> checkSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedId = prefs.getInt(_userIdKey);
+    if (savedId != null) {
+      _currentUserId = savedId;
+      return true;
+    }
+    return false;
   }
 }
