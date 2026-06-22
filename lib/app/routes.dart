@@ -22,6 +22,7 @@ final class Routes {
 GoRouter createRouter(AuthViewmodel authViewmodel) {
   return GoRouter(
     initialLocation: Routes.login,
+    refreshListenable: authViewmodel,
     redirect: (context, state) {
       final isLoggedIn = authViewmodel.isLoggedIn;
       final isLoginRoute = state.matchedLocation == Routes.login;

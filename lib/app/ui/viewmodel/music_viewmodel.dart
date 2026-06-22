@@ -11,9 +11,13 @@ class MusicViewmodel extends ChangeNotifier {
   MusicViewmodel({required this.musicRepository});
 
   void load() async {
-    if(isLoaded) return;
     musics = await musicRepository.loadMusics();
     isLoaded = true;
+    notifyListeners();
+  }
+
+  Future<void> changeFolder() async {
+    musics = await musicRepository.changeFolder();
     notifyListeners();
   }
 }

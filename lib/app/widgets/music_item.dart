@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 class MusicItem extends StatelessWidget {
   final int id;
@@ -22,7 +21,7 @@ class MusicItem extends StatelessWidget {
     final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -31,18 +30,11 @@ class MusicItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            QueryArtworkWidget(
-              id: id,
-              type: ArtworkType.AUDIO,
-              nullArtworkWidget: Container(
-                width: 48,
-                height: 48,
-                color: Colors.grey,
-                child: Icon(Icons.music_note),
-              ),
-              artworkWidth: 48,
-              artworkHeight: 48,
-              artworkFit: BoxFit.cover,
+            Container(
+              width: 48,
+              height: 48,
+              color: Colors.grey,
+              child: Icon(Icons.music_note),
             ),
             SizedBox(width: 12),
             Expanded(
@@ -58,12 +50,12 @@ class MusicItem extends StatelessWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
-              )
+              ),
             ),
-            Text(_formatDuration(duration))
+            Text(_formatDuration(duration)),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }

@@ -15,6 +15,8 @@ class MusicRepository {
   final List<Music> _musics = [];
   final List<Album> _albums = [];
 
+  String? _savedFolderPath;
+
   MusicRepository({required this.authRepository});
 
   UnmodifiableListView<Music> get musics => UnmodifiableListView(_musics);
@@ -22,28 +24,42 @@ class MusicRepository {
 
   Future<List<Music>> loadMusics() async {
     try {
-      final result = await _service.fetchMusics();
+      _savedFolderPath ??= await _service.pickFolder();
+      if (_savedFolderPath == null) return musics;
+
+      final result = await _service.fetchMusicsFromFolder(_savedFolderPath!);
       if (result.isEmpty) return musics;
       _musics.clear();
       _musics.addAll(result);
       return musics;
     } catch (e) {
-      debugPrint('Error fetching musics: $e');
+      debugPrint('Error loading musics: $e');
       return musics;
     }
   }
 
+  Future<List<Music>> changeFolder() async {
+    _savedFolderPath = await _service.pickFolder();
+    return loadMusics();
+  }
+
   Future<List<Album>> loadAlbums() async {
-    try {
-      final result = await _service.fetchAlbums(_musics);
-      if (result.isEmpty) return albums;
-      _albums.clear();
-      _albums.addAll(result);
-      return albums;
-    } catch (e) {
-      debugPrint('Error fetching albums: $e');
-      return albums;
+  if (_musics.isEmpty) await loadMusics();
+
+  final grouped = <String, List<Music>>{};
+    for (final music in _musics) {
+      (grouped[music.album] ??= []).add(music);
     }
+
+    _albums.clear();
+    _albums.addAll(grouped.entries.map((e) => Album(
+      id: e.key.hashCode,
+      name: e.key,
+      artist: e.value.first.artist,
+      coverUrl: '',
+      musicList: e.value,
+    )));
+    return albums;
   }
 
   Future<List<Playlist>> loadPlaylists() async {

@@ -43,6 +43,10 @@ class _MusicScreenState extends State<MusicScreen> {
               context.go(Routes.login);
             },
           ),
+          IconButton(
+            icon: Icon(Icons.folder_open),
+            onPressed: () => widget.musicViewmodel.changeFolder(),
+          ),
         ],
       ),
       body: ListenableBuilder(

@@ -1,68 +1,72 @@
-import 'package:on_audio_query/on_audio_query.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:music_player/app/data/models/music.dart';
 import 'package:music_player/app/data/models/album.dart';
+import 'package:music_player/app/data/models/playlist.dart';
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 
 class MusicService {
-  final OnAudioQuery _audioQuery = OnAudioQuery();
 
-  Future<bool> requestPermission() async {
-    final status = await Permission.audio.request();
-    if (status.isDenied) {
-      final storageStatus = await Permission.storage.request();
-      return storageStatus.isGranted;
-    }
+  Future<bool> _requestStoragePermission() async {
+    if (await Permission.manageExternalStorage.isGranted) return true;
+    final status = await Permission.manageExternalStorage.request();
     return status.isGranted;
   }
 
-  Future<List<Music>> fetchMusics() async {
-    final granted = await requestPermission();
-    if (!granted) return [];
-
-    final songs = await _audioQuery.querySongs(
-      sortType: SongSortType.TITLE,
-      orderType: OrderType.ASC_OR_SMALLER,
-      uriType: UriType.EXTERNAL,
-      ignoreCase: true,
-    );
-
-    // filter to /Music
-    final filtered = songs.where((song) =>
-      song.data.contains('/Music')
-    ).toList();
-
-    return filtered.map((song) => Music(
-      id: song.id,
-      name: song.title,
-      artist: song.artist ?? 'Unknown Artist',
-      duration: Duration(milliseconds: song.duration ?? 0),
-      coverUrl: song.data,
-    )).toList();
+  String _toRealPath(String uri) {
+    if (uri.startsWith('content://')) {
+      final encoded = uri.split('/document/').last;
+      final decoded = Uri.decodeComponent(encoded);
+      if (decoded.startsWith('primary:')) {
+        return '/storage/emulated/0/${decoded.substring('primary:'.length)}';
+      }
+    }
+    return uri;
   }
 
-  Future<List<Album>> fetchAlbums(List<Music> songs) async {
-    final granted = await requestPermission();
-    if (!granted) return [];
-
-    final albums = await _audioQuery.queryAlbums(
-      sortType: AlbumSortType.ALBUM,
-      orderType: OrderType.ASC_OR_SMALLER,
-      uriType: UriType.EXTERNAL,
-      ignoreCase: true,
-    );
-
-    return albums.map((album) {
-      final albumSongs = songs
-          .where((s) => s.artist == album.artist)
-          .toList();
-
-      return Album(
-        id: album.id,
-        name: album.album,
-        artist: album.artist ?? 'Unknown Artist',
-        coverUrl: album.id.toString(),
-        musicList: albumSongs,
-      );
-    }).toList();
+  Future<String?> pickFolder() async {
+    await _requestStoragePermission();
+    return await FilePicker.platform.getDirectoryPath();
   }
+
+  Future<List<Music>> fetchMusicsFromFolder(String folderPath) async {
+    await _requestStoragePermission();
+    
+    final realPath = _toRealPath(folderPath);
+    final dir = Directory(realPath);
+
+    if (!await dir.exists()) {
+      return [];
+    }
+
+    final audioExtensions = {'.mp3', '.flac', '.wav', '.aac', '.m4a'};
+
+    final files = await dir
+        .list(recursive: true)
+        .where((f) =>
+            f is File &&
+            audioExtensions.contains(
+                f.path.substring(f.path.lastIndexOf('.')).toLowerCase()))
+        .toList();
+
+    final musics = <Music>[];
+    for (final entry in files.asMap().entries) {
+      final file = entry.value as File;
+      final metadata = await readMetadata(file, getImage: false);
+      final name = file.path.split(Platform.pathSeparator).last;
+      musics.add(Music(
+        id: entry.key,
+        name: metadata.title ?? name.replaceAll(RegExp(r'\.(mp3|flac|wav|aac|m4a)$', caseSensitive: false), ''),
+        artist: metadata.artist ?? 'Unknown Artist',
+        album: metadata.album ?? 'Unknown Album',
+        duration: metadata.duration ?? Duration.zero,
+        coverUrl: file.path,
+      ));
+    }
+    return musics;
+  }
+
+  Future<List<Album>> fetchAlbums(List<Music> songs) async => [];
+  Future<List<Playlist>> fetchPlaylists(List<Music> songs) async => [];
 }
