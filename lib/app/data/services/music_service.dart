@@ -55,16 +55,27 @@ class MusicService {
       final file = entry.value as File;
       final metadata = await readMetadata(file, getImage: false);
       final name = file.path.split(Platform.pathSeparator).last;
+      final dir = file.path.substring(0, file.path.lastIndexOf(Platform.pathSeparator));
+      final cover = _findCoverInDirectory(dir);
       musics.add(Music(
         id: entry.key,
         name: metadata.title ?? name.replaceAll(RegExp(r'\.(mp3|flac|wav|aac|m4a)$', caseSensitive: false), ''),
         artist: metadata.artist ?? 'Unknown Artist',
         album: metadata.album ?? 'Unknown Album',
         duration: metadata.duration ?? Duration.zero,
-        coverUrl: file.path,
+        coverUrl: cover,
+        filePath: file.path
       ));
     }
     return musics;
+  }
+
+  String? _findCoverInDirectory(String dirPath) {
+    for (final ext in ['cover.jpg', 'cover.jpeg', 'cover.png']) {
+      final file = File('$dirPath${Platform.pathSeparator}$ext');
+      if (file.existsSync()) return file.path;
+    }
+    return null;
   }
 
   Future<List<Album>> fetchAlbums(List<Music> songs) async => [];

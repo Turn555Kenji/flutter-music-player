@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class MusicItem extends StatelessWidget {
   final int id;
   final String name;
   final String artist;
   final Duration duration;
+  final String? coverUrl;
   final void Function()? onPressed;
 
   const MusicItem({
@@ -14,6 +16,7 @@ class MusicItem extends StatelessWidget {
     required this.artist,
     required this.duration,
     this.onPressed,
+    this.coverUrl,
   });
 
   String _formatDuration(Duration duration) {
@@ -30,11 +33,11 @@ class MusicItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              color: Colors.grey,
-              child: Icon(Icons.music_note),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: coverUrl != null && coverUrl!.isNotEmpty
+                ? Image.file(File(coverUrl!), width: 48, height: 48, fit: BoxFit.cover)
+                : Container(width: 48, height: 48, color: Colors.grey, child: Icon(Icons.music_note)),
             ),
             SizedBox(width: 12),
             Expanded(

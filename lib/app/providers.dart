@@ -6,6 +6,8 @@ import 'package:music_player/app/ui/viewmodel/player_viewmodel.dart';
 import 'package:music_player/app/ui/viewmodel/login_viewmodel.dart';
 import 'package:music_player/app/data/repositories/music_repository.dart';
 import 'package:music_player/app/data/repositories/authentication_repository.dart';
+import 'package:music_player/app/ui/viewmodel/lyrics_viewmodel.dart';
+import 'package:music_player/app/data/services/lyrics_service.dart';
 
 final providers = [
   Provider<AuthRepository>(
@@ -38,5 +40,8 @@ final providers = [
   ),
   ChangeNotifierProvider<PlayerViewmodel>(
     create: (context) => PlayerViewmodel(),
-  )
+  ),
+  ChangeNotifierProvider<LyricsViewmodel>(
+    create: (context) => LyricsViewmodel(),
+  ),
 ];

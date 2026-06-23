@@ -5,6 +5,7 @@ class Music {
   final Duration duration;
   final String? coverUrl;
   final String album;
+  final String filePath;
 
-  Music({required this.id, required this.name, required this.artist, required this.duration, this.coverUrl, required this.album});
+  Music({required this.id, required this.name, required this.artist, required this.duration, this.coverUrl, required this.album, required this.filePath});
 }

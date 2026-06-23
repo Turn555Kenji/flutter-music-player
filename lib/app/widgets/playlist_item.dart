@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class PlaylistItem extends StatelessWidget {
   final int id;
@@ -24,11 +25,11 @@ class PlaylistItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              color: Colors.grey,
-              child: Icon(Icons.music_note),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: coverUrl.isNotEmpty
+                ? Image.file(File(coverUrl), width: 48, height: 48, fit: BoxFit.cover)
+                : Container(width: 48, height: 48, color: Colors.grey, child: Icon(Icons.album)),
             ),
             SizedBox(width: 12),
             Expanded(

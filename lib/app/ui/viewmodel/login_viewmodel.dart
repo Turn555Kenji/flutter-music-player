@@ -47,7 +47,6 @@ class AuthViewmodel extends ChangeNotifier {
 
   Future<void> checkSession() async {
     isCheckingSession = true;
-    notifyListeners();
 
     await authRepository.checkSession();
 

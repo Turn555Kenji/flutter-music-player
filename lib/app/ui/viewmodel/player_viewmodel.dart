@@ -12,6 +12,7 @@ class PlayerViewmodel extends ChangeNotifier {
   Duration totalDuration = Duration.zero;
   List<Music> queue = [];
   int currentIndex = 0;
+  void Function(Music)? onMusicChanged;
 
   PlayerViewmodel() {
     _player.playerStateStream.listen((state) {
@@ -37,16 +38,16 @@ class PlayerViewmodel extends ChangeNotifier {
   }
 
   Future<void> play(Music music, {List<Music>? musicQueue}) async {
-    if (music.coverUrl == null) return;
 
     try {
       currentMusic = music;
+      onMusicChanged?.call(music);
       if (musicQueue != null) {
         queue = musicQueue;
         currentIndex = queue.indexWhere((m) => m.id == music.id);
       }
 
-      await _player.setFilePath(music.coverUrl!);
+      await _player.setFilePath(music.filePath);
       await _player.play();
       notifyListeners();
     } catch (e) {

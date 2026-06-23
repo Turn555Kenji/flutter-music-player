@@ -56,7 +56,7 @@ class MusicRepository {
       id: e.key.hashCode,
       name: e.key,
       artist: e.value.first.artist,
-      coverUrl: '',
+      coverUrl: e.value.firstWhere((m) => m.coverUrl != null && m.coverUrl!.isNotEmpty, orElse: () => e.value.first).coverUrl ?? '',
       musicList: e.value,
     )));
     return albums;
