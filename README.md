@@ -22,10 +22,7 @@ Trata-se de um aplicativo de músicas, podendo carregar elas individualmente, ou
 
 ### Adições futuras
 
-- Interação com APIs de música reais.
 - Reestruturação das Views por meio de uma tela principal que conterá a Navbar.
-- Implementação do playback e queue de músicas.
-- Reajustar plugins para acomodar versões mais recentes do flutter/gradlew
 
 ## Instalação
 
