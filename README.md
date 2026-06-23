@@ -17,8 +17,6 @@ Trata-se de um aplicativo de músicas, podendo carregar elas individualmente, ou
 - CRUD na forma de playlists.
   - Faz uso de formulário para sua criação.
   - Obriga um nome para a playlist, exibindo uma mensagem de erro na interface caso inexistente.
-- Dados são atualmente apenas estáticos, portanto, qualquer interação com o Back-end é apenas por meio de mocks.
-  - Dados que serão futuramente requisitados via API possuem tratamento de erros, e são formatados para seu respectivo tipo ao ser recebido.
 
 ### Adições futuras
 
