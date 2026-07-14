@@ -2,10 +2,6 @@
 
 Projeto desenvolvido para a disciplina de Programação De Dispositivos Móveis
 
-## Autoria
-
-Kenji Henrique Ueyama Yashinishi
-
 ## Sobre o projeto
 
 Este programa feito em flutter tem como objetivo o aprendizado da ferramenta, incorporando ela com padrões de desenvolvimento, UX e arquitetura do fluxo de dados.
